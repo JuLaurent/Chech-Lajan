@@ -1,6 +1,6 @@
 /* Chèch Lajan
  *
- * /router.js - backbone router
+ * /router.js - backbone admin router
  *
  * started @ 12/12/14
  */
@@ -13,8 +13,12 @@ var _ = require( "underscore" ),
 
 Backbone.$ = require( "jquery" );
 
-var AdminView = require( "./views/admin" );
-var AdminMap = require ( "./views/map" );
+var AdminMainView = require( "./views/main" );
+var AdminHeaderView = require( "./views/header" );
+var AdminMapView = require ( "./views/map" );
+
+var TerminalsCollection = require( "./collections/terminals" );
+var TerminalModel = require( "./models/terminal" );
 
 var oPosition;
 
@@ -28,11 +32,11 @@ module.exports = Backbone.Router.extend( {
     },
 
     "start": function() {
-        console.log( "Router:started" );
+        console.log( "AdminRouter:started" );
 
         // 1. define & init views
-        ( this.views.main = new MainView() ).render();
-        this.views.main.initHeader( ( this.views.header = new HeaderView() ).render() );
+        ( this.views.main = new AdminMainView() ).render();
+        this.views.main.initAdminHeader( ( this.views.header = new AdminHeaderView() ).render() );
 
         // 2. get geoposition of user
         jeolok.getCurrentPosition( { "enableHighAccuracy": true, "timeout": 500 }, function( oError, oGivenPosition ) {
@@ -52,12 +56,13 @@ module.exports = Backbone.Router.extend( {
         } );
     },
 
-    "showAdmin": function() {
-        console.log( "showAdmin" );
+    "showAdminMap": function() {
+        console.log( "showAdminMap" );
+
         var that = this;
         this.views.main.loading( true );
         var oTerminalsCollection = new TerminalsCollection();
-        ( this.views.admin = new AdminView( oTerminalsCollection ) )
+        ( this.views.map = new AdminMapView( oTerminalsCollection ) )
             .collection
                 .fetch( {
                     "data": {
@@ -66,14 +71,10 @@ module.exports = Backbone.Router.extend( {
                     },
                     "success": function() {
                         that.views.main.clearContent();
-                        that.views.main.initAdmin( that.views.admin.render() );
-                        that.views.main.loading( false, "Distributeurs dans un rayon de 10 km" );
+                        that.views.main.initAdminMap( that.views.map.render() );
+                        that.views.main.loading( false, "Distributeurs dans un rayon de " );
                     }
                 } );
-    }
-
-    "showAdminMap": function() {
-        console.log( "showTerminalsMap" );
     },
 
 } );

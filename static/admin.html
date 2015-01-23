@@ -29,6 +29,8 @@
             <!-- details insertion point -->
             <!-- aboutbox insertion point -->
         </div>
+        
+        <div id="gmap"></div>
 
         <script type="text/template" id="tpl-header">
             <header>
@@ -46,19 +48,14 @@
                 </a>
             </section>
         </script>
-
-        <script type="text/template" id="tpl-map">
-            <div id="gmap"></div>
-        </script>
-
-        <script type="text/template" id="tpl-result-list">
-            <a href="#" id="see-all">
-                <strong>Voir tous les distributeurs…</strong>
-            </a>
+        
+        <script type="text/template" id="tpl-list">
+            <a href="#" id="show" class="shown">Voir la liste des distributeurs</a>
+            <a href="#" id="hide" class="hidden">Cacher la liste des distributeurs</a>
             <ul></ul>
         </script>
 
-        <script type="text/template" id="tpl-result-list-elt">
+        <script type="text/template" id="tpl-list-terminals">
             <a href="#" class="details">
                 <div class="left">
                     <img src="" alt="" width="16" height="16" />
@@ -69,38 +66,6 @@
                     <span class="distance"></span>
                 </div>
             </a>
-        </script>
-
-        <script type="text/template" id="tpl-details">
-            <h3>
-                <img src="" alt="" width="16" height="16" />
-                <span></span>
-            </h3>
-            <address></address>
-            <div class="empty">
-                <p>Vide ou en panne !</p>
-            </div>
-            <div class="infos">
-                <span id="distance"></span>
-                <a href="#" id="refresh-me">
-                    <span>Recharger ma positions</span>
-                </a>
-            </div>
-            <div class="problems">
-                <a href="#" id="empty_terminal">Distributeur vide ou en panne</a>
-            </div>
-            <div class="confirm_problem">
-                <form action="javascript:void(0);">
-                    <fieldset>
-                        <p>__explain__</p>
-                        <input type="submit" value="__save__" />
-                    </fieldset>
-                </form>
-            </div>
-        </script>
-
-        <script type="text/template" id="tpl-admin">
-            <div id="gmap"></div>
         </script>
         
         <script src="js/jquery-2.1.1.min.js"></script>
@@ -115,6 +80,5 @@
         </script>
         <script src="js/admin.min.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYe9yXPt02cGZaMj9GTdiq4T4aFw1ENaY"></script>
-        <script src="js/gmap.js"></script>
     </body>
 </html>

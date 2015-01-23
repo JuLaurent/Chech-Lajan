@@ -1,6 +1,6 @@
 /* Chèch Lajan
  *
- * /app.js - client entry point
+ * /app.js - admin entry point
  *
  * started @ 03/12/14
  */
@@ -9,13 +9,13 @@
 
 var $ = require( "jquery" ),
     FastClick = require( "fastclick" ),
-    Router = require( "./router" );
+    router = require( "./router" );
 
 window.app.now = new Date();
 
 $( function() {
     FastClick( document.body );
 
-    window.app.router = new Router();
+    window.app.router = new router();
     window.app.router.start();
 } );

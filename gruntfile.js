@@ -52,7 +52,7 @@ module.exports = function( grunt ) {
         },
         "watch": {
             "app": {
-                "files": [ "client/**/*.js" ],
+                "files": [ "client/**/*.js", "admin/**/*.js" ],
                 "options": {
                     "spawn": false,
                     "livereload": true

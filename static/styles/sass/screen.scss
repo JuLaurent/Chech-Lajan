@@ -175,3 +175,24 @@ ul a {
 	width:25%;
 	text-align: right;
 }
+
+.hidden {
+    display:none;
+}
+
+
+
+.shown{
+    display:block;
+    width:100%;
+}
+
+a.shown {
+	padding:1em 3em;
+
+}
+
+#gmap{
+	width:100%;
+	height:600px;
+}

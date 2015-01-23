@@ -1,6 +1,6 @@
 /* Chèch Lajan
  *
- * /views/header.js - backbone header view
+ * /views/admin-header.js - backbone admin header view
  *
  * started @ 12/12/14
  */
@@ -22,7 +22,7 @@ module.exports = Backbone.View.extend( {
     "constructor": function() {
         Backbone.View.apply( this, arguments );
 
-        console.log( "HeaderView:init()" );
+        console.log( "AdminHeaderView:init()" );
 
         if( !_tpl ) {
             _tpl = $( "#tpl-header" ).remove().text();
@@ -31,7 +31,6 @@ module.exports = Backbone.View.extend( {
 
     "events": {
         "click #reload": "reloadButtonClicked",
-        "click #admin": "showAdmin"
     },
 
     "render": function() {
@@ -62,10 +61,5 @@ module.exports = Backbone.View.extend( {
         e.preventDefault();
         console.log( "reloadButtonClicked" );
     },
-
-    "showAdmin": function( e ) {
-        e.preventDefault();
-        window.app.router.navigate( "admin", { trigger: true } );
-    }
 
 } );

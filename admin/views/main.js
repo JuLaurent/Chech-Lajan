@@ -21,7 +21,7 @@ module.exports = Backbone.View.extend( {
     "constructor": function() {
         Backbone.View.apply( this, arguments );
 
-        console.log( "MainView:init()" );
+        console.log( "AdminMainView:init()" );
 
         // TODO : define private accessors to subviews
     },
@@ -37,8 +37,8 @@ module.exports = Backbone.View.extend( {
         }
     },
 
-    "initHeader": function( HeaderView ) {
-        this.$el.find( "#main" ).append( HeaderView.$el );
+    "initAdminHeader": function( AdminHeaderView ) {
+        this.$el.find( "#main" ).append( AdminHeaderView.$el );
     },
 
     "clearContent": function() {
@@ -46,8 +46,8 @@ module.exports = Backbone.View.extend( {
         this.$el.find( "#main section:not(#status)" ).remove();
     },
 
-    "initAdmin": function( AdminView ) {
-        this.$el.find( "#main" ).append( AdminView.$el );
-    }
+    "initAdminMap": function( AdminMapView ) {
+        this.$el.find( "#main" ).append( AdminMapView.$el );
+    },
 
 } );

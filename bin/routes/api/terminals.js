@@ -83,7 +83,7 @@ var details = function( oRequest, oResponse ) {
         } );
 };
 
-var admin = function( oRequest, oResponse ) {
+var map = function( oRequest, oResponse ) {
     var fLatitude = parseFloat( oRequest.query.latitude ),
         fLongitude = parseFloat( oRequest.query.longitude ),
         iGivenRadius = +oRequest.query.radius,
@@ -154,7 +154,6 @@ var empty = function( oRequest, oResponse ) {
 // Declare routes
 exports.init = function( oApp ) {
     oApp.get( "/api/terminals", list );
-    oApp.get( "/api/admin", admin );
     oApp.get( "/api/terminals/:id", details );
     oApp.put( "/api/terminals/:id/empty", empty );
 };
