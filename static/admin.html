@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Chech-Lajan</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+        <link rel="stylesheet" href="styles/screen.css" media="screen" />
+
+        <meta name="apple-mobile-web-app-title" content="Cash-Cache" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+        <link rel="apple-touch-icon-precomposed" href="images/icons/57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/icons/72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/icons/114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/icons/144.png" />
+
+        <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 1)" href="images/startup/320x460.png" />
+        <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 2)" href="images/startup/640x920.png" />
+        <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="images/startup/640x1096.png" />
+    </head>
+    <body>
+        <!-- gmap insertion point -->
+        <div id="main">
+            <!-- header insertion point -->
+            <!-- result insertion point -->
+            <!-- details insertion point -->
+            <!-- aboutbox insertion point -->
+        </div>
+
+        <script type="text/template" id="tpl-header">
+            <header>
+                <a href="#" id="back">
+                    <span>retour</span>
+                </a>
+                <h1>
+                    Chech-Lajan
+                </h1>
+            </header>
+            <section id="status">
+                <h3></h3>
+                <a href="#" id="reload">
+                    <span>recharger</span>
+                </a>
+            </section>
+        </script>
+
+        <script type="text/template" id="tpl-map">
+            <div id="gmap"></div>
+        </script>
+
+        <script type="text/template" id="tpl-result-list">
+            <a href="#" id="see-all">
+                <strong>Voir tous les distributeurs…</strong>
+            </a>
+            <ul></ul>
+        </script>
+
+        <script type="text/template" id="tpl-result-list-elt">
+            <a href="#" class="details">
+                <div class="left">
+                    <img src="" alt="" width="16" height="16" />
+                    <span class="name"></span>
+                    <address></address>    
+                </div><!--
+                --><div class="right">
+                    <span class="distance"></span>
+                </div>
+            </a>
+        </script>
+
+        <script type="text/template" id="tpl-details">
+            <h3>
+                <img src="" alt="" width="16" height="16" />
+                <span></span>
+            </h3>
+            <address></address>
+            <div class="empty">
+                <p>Vide ou en panne !</p>
+            </div>
+            <div class="infos">
+                <span id="distance"></span>
+                <a href="#" id="refresh-me">
+                    <span>Recharger ma positions</span>
+                </a>
+            </div>
+            <div class="problems">
+                <a href="#" id="empty_terminal">Distributeur vide ou en panne</a>
+            </div>
+            <div class="confirm_problem">
+                <form action="javascript:void(0);">
+                    <fieldset>
+                        <p>__explain__</p>
+                        <input type="submit" value="__save__" />
+                    </fieldset>
+                </form>
+            </div>
+        </script>
+
+        <script type="text/template" id="tpl-admin">
+            <div id="gmap"></div>
+        </script>
+        
+        <script src="js/jquery-2.1.1.min.js"></script>
+        <script src="js/libs.min.js"></script>
+        <script>
+            window.app = {
+                "id": "chech-lajan",
+                "name": "Chèch Lajan",
+                "version": "0.0.1",
+                "api_url": "http://192.168.111.222"
+            };
+        </script>
+        <script src="js/admin.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYe9yXPt02cGZaMj9GTdiq4T4aFw1ENaY"></script>
+        <script src="js/gmap.js"></script>
+    </body>
+</html>

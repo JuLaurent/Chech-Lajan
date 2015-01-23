@@ -1,0 +1,177 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+$blue : rgb(0,12,32);
+$turquoise : rgb(0,127,123);
+
+@import url(http://fonts.googleapis.com/css?family=Lato:400,700);
+
+html {
+	font-family: 'Lato', sans-serif;
+}
+
+header {
+	color:white;
+	background-color:$blue;
+	padding:1em 3em;
+}
+
+header:after {
+	content:"";
+	display:block;
+	clear:both;
+}
+
+#back {
+	float:left;
+	background-image:url(../images/icons/back.svg);
+	background-repeat: no-repeat;
+	background-size: contain;
+	width:20px;
+	height:20px;
+	text-indent: -99999px;
+}
+
+#admin {
+	float:right;
+	background-image:url(../images/icons/admin.svg);
+	background-repeat: no-repeat;
+	background-size: contain;
+	width:20px;
+	height:20px;
+	text-indent: -99999px;
+}
+
+h1 {
+	text-align:center;
+	font-size:1.4em;
+}
+
+#status {
+	color:white;
+	background-color:$turquoise;
+	padding:1em 3em;
+	position:relative;	
+}
+
+#status:after {
+	content:"";
+	display:block;
+	clear:both;
+}
+
+#status p {
+	font-weight:bold;
+}
+
+address span {
+	display:block;
+}
+
+#distributeurs p {
+	float:left;
+}
+
+#reload {
+	float:right;
+	background-image:url(../images/icons/reload.svg);
+	background-repeat: no-repeat;
+	background-size: contain;
+	width:20px;
+	height:20px;
+	text-indent: -99999px;
+}
+
+#see-all{
+	display:block;
+	width:100%;
+	padding:1em 3em;
+}
+
+ul a {
+	box-sizing: border-box;
+	display:block;
+	width:100%;
+	padding:1em 3em;
+	border-top:1px solid $turquoise;		
+}
+
+#result a {
+	color:$blue;
+	text-decoration:none;
+}
+
+.details {
+	display:block;
+	width:100%;
+	padding:1em 3em;
+	border-top:1px solid $turquoise;			
+}
+
+.details img {
+	margin-right:10px;
+}
+
+.details:after {
+	content:"";
+	display:block;
+	clear:both;	
+}
+
+.details .left {
+	display:inline-block;
+	width:75%;
+	text-align: left;
+}
+
+.details .right {
+	display:inline-block;
+	width:25%;
+	text-align: right;
+}

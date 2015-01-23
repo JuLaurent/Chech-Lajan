@@ -1,0 +1,31 @@
+extends layouts/main.jade
+
+block title
+    title Ma première page en jade
+
+block content
+    h1 Hello, World !
+
+    figure
+        img( alt="", src="img/anim.gif" )/
+        figcaption Ma super image
+
+    p Mon nom est #{lastname}.
+
+    p= "Mon prénom est " + firstname + "."
+
+    p
+        | Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+        | Soluta, quasi? Cupiditate quae, nulla recusandae in placeat
+        | ducimus a inventore, fuga quos.
+        br/
+        | Eos fugit iste maiores?
+        br/
+        = age
+
+    ul
+        each cat in cats
+            li
+                strong= cat.name
+                br/
+                span (#{ cat.gender })
