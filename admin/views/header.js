@@ -29,18 +29,12 @@ module.exports = Backbone.View.extend( {
         }
     },
 
-    "events": {
-        "click #reload": "reloadButtonClicked",
-    },
-
     "render": function() {
+        
         this.$el
-            .html( _tpl )
-            .find( "#back" )
-                .hide()
-                .end();
+            .html( _tpl );
 
-        this.$status = this.$el.find( "#status h3" );
+        this.$status = this.$el.find( "#status h2" );
 
         return this;
     },
@@ -55,11 +49,6 @@ module.exports = Backbone.View.extend( {
 
     "setStatus": function( sText ) {
         this.$status.text( sText );
-    },
-
-    "reloadButtonClicked": function( e ) {
-        e.preventDefault();
-        console.log( "reloadButtonClicked" );
     },
 
 } );

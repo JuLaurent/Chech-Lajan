@@ -15,7 +15,8 @@ Backbone.$ = require( "jquery" );
 
 var AdminMainView = require( "./views/main" );
 var AdminHeaderView = require( "./views/header" );
-var AdminMapView = require ( "./views/map" );
+var AdminTerminalsListView = require ( "./views/terminals-list" );
+var AdminTerminalDetailsView = require ( "./views/terminal-details" );
 
 var TerminalsCollection = require( "./collections/terminals" );
 var TerminalModel = require( "./models/terminal" );
@@ -27,8 +28,9 @@ module.exports = Backbone.Router.extend( {
     "views": {},
 
     "routes": {
-        "admin": "showAdminMap",
-        "admin/map": "showAdminMap"
+        "admin": "showAdminTerminalsList",
+        "admin/list": "showAdminTerminalsList",
+        "admin/details/:id": "showAdminTerminalDetails"
     },
 
     "start": function() {
@@ -48,6 +50,7 @@ module.exports = Backbone.Router.extend( {
             } else {
                 oPosition = oGivenPosition.coords;
             }
+
             window.app.currentPosition = oPosition;
             // 3. launch router
             Backbone.history.start( {
@@ -56,13 +59,14 @@ module.exports = Backbone.Router.extend( {
         } );
     },
 
-    "showAdminMap": function() {
-        console.log( "showAdminMap" );
+    "showAdminTerminalsList": function() {
+        console.log( "showAdminTerminalsList" );
 
         var that = this;
         this.views.main.loading( true );
         var oTerminalsCollection = new TerminalsCollection();
-        ( this.views.map = new AdminMapView( oTerminalsCollection ) )
+
+        ( this.views.list = new AdminTerminalsListView( oPosition, oTerminalsCollection ) )
             .collection
                 .fetch( {
                     "data": {
@@ -71,10 +75,29 @@ module.exports = Backbone.Router.extend( {
                     },
                     "success": function() {
                         that.views.main.clearContent();
-                        that.views.main.initAdminMap( that.views.map.render() );
+                        that.views.main.initAdminList( that.views.list.render() );
                         that.views.main.loading( false, "Distributeurs dans un rayon de " );
                     }
                 } );
+    },
+
+    "showAdminTerminalDetails": function( sTerminalID ) {
+        console.log( "showAdminTerminalDetails" );
+
+        var that = this;
+        this.views.main.loading( true );
+        var oTerminal = new TerminalModel( { id: sTerminalID } );
+
+        ( this.views.details = new AdminTerminalDetailsView( oPosition, oTerminal ) )
+            .model
+                .fetch( {
+                    "success": function() {
+                        that.views.main.clearContent();
+                        that.views.main.initAdminDetails( that.views.details.render() );
+                        that.views.main.loading( false );
+                    }
+                } );
+
     },
 
 } );

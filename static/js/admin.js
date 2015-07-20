@@ -96,7 +96,8 @@ Backbone.$ = require( "jquery" );
 
 var AdminMainView = require( "./views/main" );
 var AdminHeaderView = require( "./views/header" );
-var AdminMapView = require ( "./views/map" );
+var AdminTerminalsListView = require ( "./views/terminals-list" );
+var AdminTerminalDetailsView = require ( "./views/terminal-details" );
 
 var TerminalsCollection = require( "./collections/terminals" );
 var TerminalModel = require( "./models/terminal" );
@@ -108,8 +109,9 @@ module.exports = Backbone.Router.extend( {
     "views": {},
 
     "routes": {
-        "admin": "showAdminMap",
-        "admin/map": "showAdminMap"
+        "admin": "showAdminTerminalsList",
+        "admin/list": "showAdminTerminalsList",
+        "admin/details/:id": "showAdminTerminalDetails"
     },
 
     "start": function() {
@@ -129,6 +131,7 @@ module.exports = Backbone.Router.extend( {
             } else {
                 oPosition = oGivenPosition.coords;
             }
+
             window.app.currentPosition = oPosition;
             // 3. launch router
             Backbone.history.start( {
@@ -137,13 +140,14 @@ module.exports = Backbone.Router.extend( {
         } );
     },
 
-    "showAdminMap": function() {
-        console.log( "showAdminMap" );
+    "showAdminTerminalsList": function() {
+        console.log( "showAdminTerminalsList" );
 
         var that = this;
         this.views.main.loading( true );
         var oTerminalsCollection = new TerminalsCollection();
-        ( this.views.map = new AdminMapView( oTerminalsCollection ) )
+
+        ( this.views.list = new AdminTerminalsListView( oPosition, oTerminalsCollection ) )
             .collection
                 .fetch( {
                     "data": {
@@ -152,14 +156,33 @@ module.exports = Backbone.Router.extend( {
                     },
                     "success": function() {
                         that.views.main.clearContent();
-                        that.views.main.initAdminMap( that.views.map.render() );
+                        that.views.main.initAdminList( that.views.list.render() );
                         that.views.main.loading( false, "Distributeurs dans un rayon de " );
                     }
                 } );
     },
 
+    "showAdminTerminalDetails": function( sTerminalID ) {
+        console.log( "showAdminTerminalDetails" );
+
+        var that = this;
+        this.views.main.loading( true );
+        var oTerminal = new TerminalModel( { id: sTerminalID } );
+
+        ( this.views.details = new AdminTerminalDetailsView( oPosition, oTerminal ) )
+            .model
+                .fetch( {
+                    "success": function() {
+                        that.views.main.clearContent();
+                        that.views.main.initAdminDetails( that.views.details.render() );
+                        that.views.main.loading( false );
+                    }
+                } );
+
+    },
+
 } );
-},{"./collections/terminals":2,"./models/terminal":3,"./views/header":5,"./views/main":6,"./views/map":7,"backbone":"backbone","jeolok":"jeolok","jquery":"jquery","underscore":"underscore"}],5:[function(require,module,exports){
+},{"./collections/terminals":2,"./models/terminal":3,"./views/header":5,"./views/main":6,"./views/terminal-details":7,"./views/terminals-list":9,"backbone":"backbone","jeolok":"jeolok","jquery":"jquery","underscore":"underscore"}],5:[function(require,module,exports){
 /* Chèch Lajan
  *
  * /views/admin-header.js - backbone admin header view
@@ -191,18 +214,12 @@ module.exports = Backbone.View.extend( {
         }
     },
 
-    "events": {
-        "click #reload": "reloadButtonClicked",
-    },
-
     "render": function() {
+        
         this.$el
-            .html( _tpl )
-            .find( "#back" )
-                .hide()
-                .end();
+            .html( _tpl );
 
-        this.$status = this.$el.find( "#status h3" );
+        this.$status = this.$el.find( "#status h2" );
 
         return this;
     },
@@ -217,11 +234,6 @@ module.exports = Backbone.View.extend( {
 
     "setStatus": function( sText ) {
         this.$status.text( sText );
-    },
-
-    "reloadButtonClicked": function( e ) {
-        e.preventDefault();
-        console.log( "reloadButtonClicked" );
     },
 
 } );
@@ -273,10 +285,15 @@ module.exports = Backbone.View.extend( {
     "clearContent": function() {
         // cette methode sert à vider les vues avant d'en rajouter de nouvelles
         this.$el.find( "#main section:not(#status)" ).remove();
+
     },
 
-    "initAdminMap": function( AdminMapView ) {
-        this.$el.find( "#main" ).append( AdminMapView.$el );
+    "initAdminList": function( AdminTerminalsListView ) {
+        this.$el.find( "#main" ).append( AdminTerminalsListView.$el );
+    },
+
+    "initAdminDetails": function( AdminTerminalDetailsView ){
+        this.$el.find( "#main" ).append( AdminTerminalDetailsView.$el );
     },
 
 } );
@@ -284,49 +301,79 @@ module.exports = Backbone.View.extend( {
 },{"backbone":"backbone","jquery":"jquery","underscore":"underscore"}],7:[function(require,module,exports){
 /* Chèch Lajan
  *
- * /views/map.js - backbone admin map
+ * /views/terminal-details.js - backbone admin terminal details view
  *
- * started @ 12/12/14
+ * started @ 19/12/14
  */
 
 "use strict";
 
 var _ = require( "underscore" ),
     Backbone = require( "backbone" ),
-    $ = require( "jquery" );
+    $ = require( "jquery" ),
+    jeyodistans = require( "jeyo-distans" );
 
 Backbone.$ = require( "jquery" );
 
 var _tpl;
 
-var TerminalElementView = require( "./terminals" );
-
 module.exports = Backbone.View.extend( {
 
     "el": "<section />",
 
-    "constructor": function( oTerminalsCollection ) {
+    "constructor": function( oPosition, oTerminalModel ) {
         Backbone.View.apply( this, arguments );
 
-        this.collection = oTerminalsCollection;
+        this.model = oTerminalModel;
+        this.position = oPosition;
 
-        console.log( "AdminMapView:init()" );
+        console.log( "TerminalDetailsView:init()" );
 
         if( !_tpl ) {
-            _tpl = $( "#tpl-list" ).remove().text();
+            _tpl = $( "#tpl-details" ).remove().text();
         }
-
     },
 
     "events": {
-        "click #show": "showList",
-        "click #hide": "hideList"
+        "click .problems a": "toggleEmptyState",
+        "click #back": "backList"
     },
 
     "render": function() {
 
+        var oBank = this.model.get( "bank" );
+
+        var oTerminalPosition = {
+            "latitude": this.model.get( "latitude" ),
+            "longitude": this.model.get( "longitude" )
+        };
+
+        $( "#status" ).hide();
+        $( "#back" ).show();
+
         this.$el
-            .html( _tpl );
+            .html( _tpl )
+            .find( ".details" )
+                .find( '.left' )
+                    .find( "img" )
+                        .attr( "src", oBank && oBank.icon ? "/images/banks/" + oBank.icon : "images/banks/unknown.png" )
+                        .attr( "alt", oBank && oBank.name ? oBank.name : "Inconnu" )
+                        .end()
+                    .find( ".name" )
+                        .css( "color", "#" + ( oBank && oBank.color ? oBank.color : "333" ) )
+                        .text( oBank && oBank.name ? oBank.name : "Inconnu" )
+                        .end()
+                    .find( "address" )
+                        .css( "color", "#" + ( oBank && oBank.color ? oBank.color : "333" ) )
+                        .text( this.model.get( "address" ) )
+                        .end()
+                    .end()
+                .find( '.right' )
+                    .find( '.distance' )
+                        .css( "color", "#" + ( oBank && oBank.color ? oBank.color : "333" ) )
+                        .text( '+- ' + ( +( jeyodistans( oTerminalPosition, this.position ) * 1000 ) + "m" ) )
+                        .end()
+                    .end();
 
         this.create();
 
@@ -335,25 +382,10 @@ module.exports = Backbone.View.extend( {
 
     "create": function() {
 
-        this.collection.each( function( oTerminalModel ) {
-
-            var model = oTerminalModel;
-            
-            var bank = model.get( "bank" ),
-                latitude = model.get( "latitude" ),
-                longitude = model.get( "longitude" );
-
-            new google.maps.Marker({
-                position: new google.maps.LatLng( latitude, longitude ),
-                map: myMap,
-            });
-
-        } );
-
-        var myLatlng = new google.maps.LatLng(50.8459195, 4.3648563);
+        var myLatlng = new google.maps.LatLng(this.position.latitude, this.position.longitude);
 
         var myOptions = {
-            zoom: 10,
+            zoom: 15,
             zoomControl: true,
             scrollwheel: false,
             center: myLatlng,
@@ -362,44 +394,70 @@ module.exports = Backbone.View.extend( {
 
         var myMap = new google.maps.Map( document.getElementById('gmap'), myOptions );
 
+        var myMarker = new google.maps.Marker({
+            position: myLatlng,
+            title: 'Ma position',
+            map: myMap,
+            icon: 'images/markers/me_marker.png',
+            zIndex: 2
+        });
+
+        var infowindow = new google.maps.InfoWindow({
+            content: '<div>'+ myMarker.title + '</div>'
+        });
+
+        google.maps.event.addListener( myMarker, 'click', function(e) {
+            infowindow.open(myMap, myMarker);
+        });
+            
+        var bank = this.model.get( "bank" ),
+                latitude = this.model.get( "latitude" ),
+                longitude = this.model.get( "longitude" );
+
+        var bankMarker = new google.maps.Marker({
+            position: new google.maps.LatLng( latitude, longitude ),
+            title: this.model.get( 'bank' ).name,
+            map: myMap,
+            icon: '/images/markers/terminal_marker.png',
+            zIndex: 1
+        });
+
+        var infowindow2 = new google.maps.InfoWindow({
+            content: '<div>'+ bankMarker.title + '</div>'
+        });
+
+        google.maps.event.addListener( bankMarker, 'click', function(e) {
+            infowindow2.open(myMap, bankMarker);
+        });
+        
     },
 
-    "showList": function() {
-        this.$el
-            .html( _tpl )
-            .find( '#show' )
-                .attr( 'class', 'hidden' )
-                .end() 
-            .find( '#hide' )
-                .attr( 'class', 'shown' )
-                .end() 
-            .find( 'ul' )
-                .attr( "class", "shown" )
-                .end();
-
-        var $list = this.$el.find( "ul" );
-
-        this.collection.each( function( oTerminalModel ) {
-            ( new TerminalElementView( oTerminalModel ) ).render().$el.appendTo( $list );
+    "toggleEmptyState": function( e ) {
+        e.preventDefault();
+        var that = this;
+        this.model.set( "empty", false );
+        this.model.save( null, {
+            "url": "/api/terminals/" + this.model.get( "id" ) + "/empty",
+            "success": function() {
+                that.$el
+                    .find( "empty" )
+                        .show()
+                        .end()
+                    .find( ".problems" )
+                        .hide();
+            }
         } );
     },
 
-    "hideList": function() {
-        this.$el
-            .html( _tpl )
-            .find( '#show' )
-                .attr( 'class', 'shown' )
-                .end() 
-            .find( '#hide' )
-                .attr( 'class', 'hidden' )
-                .end() 
-            .find( 'ul' )
-                .attr( "class", "hidden" )
-                .end()
+    "backList": function( e ) {
+        e.preventDefault();
+        
+        console.log('back');
     }
 
 } );
-},{"./terminals":8,"backbone":"backbone","jquery":"jquery","underscore":"underscore"}],8:[function(require,module,exports){
+
+},{"backbone":"backbone","jeyo-distans":"jeyo-distans","jquery":"jquery","underscore":"underscore"}],8:[function(require,module,exports){
 /* Chèch Lajan
  *
  * /views/terminals-list-element.js - backbone terminals list view
@@ -458,7 +516,7 @@ module.exports = Backbone.View.extend( {
                 .find( '.right' )
                     .find( '.distance' )
                         .css( "color", "#" + ( oBank && oBank.color ? oBank.color : "333" ) )
-                        .text( ( parseFloat( this.model.get( "distance" ) ) * 1000 ) + "m" )
+                        .text( '+- ' + ( parseFloat( this.model.get( "distance" ) ) * 1000 ) + "m" )
                         .end()
                     .end();
 
@@ -467,8 +525,168 @@ module.exports = Backbone.View.extend( {
 
     "showTerminal": function( e ) {
         e.preventDefault();
-        window.app.router.navigate( "terminals/details/" + this.model.get( "id" ), { trigger: true } );
+        window.app.router.navigate( "admin/details/" + this.model.get( "id" ), { trigger: true } );
     }
 
 } );
-},{"backbone":"backbone","jquery":"jquery","underscore":"underscore"}]},{},[1]);
+},{"backbone":"backbone","jquery":"jquery","underscore":"underscore"}],9:[function(require,module,exports){
+/* Chèch Lajan
+ *
+ * /views/terminals-list.js - backbone admin terminals list
+ *
+ * started @ 12/12/14
+ */
+
+"use strict";
+
+var _ = require( "underscore" ),
+    Backbone = require( "backbone" ),
+    $ = require( "jquery" );
+
+Backbone.$ = require( "jquery" );
+
+var _tpl;
+
+var TerminalElementView = require( "./terminals-list-element" );
+
+module.exports = Backbone.View.extend( {
+
+    "el": "<section />",
+
+    "constructor": function( oPosition, oTerminalsCollection ) {
+        Backbone.View.apply( this, arguments );
+
+        //console.log(latitude);
+
+        this.collection = oTerminalsCollection;
+        this.position = oPosition;
+
+        console.log( "AdminTerminalsListView:init()" );
+
+        if( !_tpl ) {
+            _tpl = $( "#tpl-list" ).remove().text();
+        }
+
+    },
+
+    "events": {
+        "click #reload": "reloadList",
+        "click #show": "showList",
+        "click #hide": "hideList",
+    },
+
+    "render": function() {
+
+        this.$el
+            .html( _tpl );
+
+        this.create();
+
+        return this;
+    },
+
+    "create": function() {
+
+        var myLatlng = new google.maps.LatLng(this.position.latitude, this.position.longitude);
+
+        var myOptions = {
+            zoom: 11,
+            zoomControl: true,
+            scrollwheel: false,
+            center: myLatlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        var myMap = new google.maps.Map( document.getElementById('gmap'), myOptions );
+
+        var myMarker = new google.maps.Marker({
+            position: myLatlng,
+            title: 'Ma position',
+            map: myMap,
+            icon: 'images/markers/me_marker.png',
+            zIndex: 2
+        });
+
+        var infowindow = new google.maps.InfoWindow({
+            content: '<div>'+ myMarker.title + '</div>'
+        });
+
+        google.maps.event.addListener( myMarker, 'click', function(e) {
+            infowindow.open(myMap, myMarker);
+        });
+
+        this.collection.each( function( oTerminalModel ) {
+
+            var model = oTerminalModel;
+            
+            var bank = model.get( "bank" ),
+                latitude = model.get( "latitude" ),
+                longitude = model.get( "longitude" );
+
+            var myMarker = new google.maps.Marker({
+                position: new google.maps.LatLng( latitude, longitude ),
+                title: model.get( 'bank' ).name,
+                map: myMap,
+                icon: '/images/markers/terminal_marker.png',
+                zIndex: 1
+            });
+
+            var infowindow = new google.maps.InfoWindow({
+                content: '<div>'+ myMarker.title + '</div>'
+            });
+
+            google.maps.event.addListener( myMarker, 'click', function(e) {
+                infowindow.open(myMap, myMarker);
+            });
+
+        } );
+        
+
+    },
+
+    "reloadList": function(e) {
+        e.preventDefault();
+        alert('coucou');
+        window.app.router.navigate( "admin/list", { trigger: true } );
+    },
+
+    "showList": function(e) {
+        e.preventDefault();
+
+        this.$el
+            .html( _tpl )
+            .find( '#show' )
+                .attr( 'class', 'hidden' )
+                .end() 
+            .find( '#hide' )
+                .attr( 'class', 'shown' )
+                .end() 
+            .find( 'ul' )
+                .slideDown()
+                .end();
+
+        var $list = this.$el.find( "ul" );
+
+        this.collection.each( function( oTerminalModel ) {
+            ( new TerminalElementView( oTerminalModel ) ).render().$el.appendTo( $list );
+        } );
+    },
+
+    "hideList": function(e) {
+        e.preventDefault();
+
+        this.$el
+            .html( _tpl )
+            .find( '#show' )
+                .attr( 'class', 'shown' )
+                .end() 
+            .find( '#hide' )
+                .attr( 'class', 'hidden' )
+                .end() 
+            .find( 'ul' )
+                .slideUp()
+                .end()
+    }
+
+} );
+},{"./terminals-list-element":8,"backbone":"backbone","jquery":"jquery","underscore":"underscore"}]},{},[1]);

@@ -34,18 +34,14 @@
 
         <script type="text/template" id="tpl-header">
             <header>
-                <a href="#" id="back">
-                    <span>retour</span>
-                </a>
-                <h1>
-                    Chech-Lajan
-                </h1>
+                <a href="#" id="back">retour</a>
+                <h1>Chech-Lajan</h1>
             </header>
             <section id="status">
-                <h3></h3>
-                <a href="#" id="reload">
-                    <span>recharger</span>
-                </a>
+                <h2></h2>
+                <div class="reload">
+                    <a href="#" id="reload">recharger</a>
+                </div>
             </section>
         </script>
         
@@ -66,6 +62,19 @@
                     <span class="distance"></span>
                 </div>
             </a>
+        </script>
+
+        <script type="text/template" id="tpl-details">
+            <div href="#" class="details">
+                <div class="left">
+                    <img src="" alt="" width="16" height="16" />
+                    <span class="name"></span>
+                    <address></address>    
+                </div><!--
+                --><div class="right">
+                    <span class="distance"></span>
+                </div>
+            </div>
         </script>
         
         <script src="js/jquery-2.1.1.min.js"></script>

@@ -44,10 +44,15 @@ module.exports = Backbone.View.extend( {
     "clearContent": function() {
         // cette methode sert à vider les vues avant d'en rajouter de nouvelles
         this.$el.find( "#main section:not(#status)" ).remove();
+
     },
 
-    "initAdminMap": function( AdminMapView ) {
-        this.$el.find( "#main" ).append( AdminMapView.$el );
+    "initAdminList": function( AdminTerminalsListView ) {
+        this.$el.find( "#main" ).append( AdminTerminalsListView.$el );
+    },
+
+    "initAdminDetails": function( AdminTerminalDetailsView ){
+        this.$el.find( "#main" ).append( AdminTerminalDetailsView.$el );
     },
 
 } );

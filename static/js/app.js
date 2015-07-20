@@ -227,7 +227,7 @@ module.exports = Backbone.View.extend( {
                 .hide()
                 .end();
 
-        this.$status = this.$el.find( "#status h3" );
+        this.$status = this.$el.find( "#status h2" );
 
         return this;
     },

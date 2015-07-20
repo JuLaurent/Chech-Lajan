@@ -56,7 +56,7 @@ module.exports = Backbone.View.extend( {
                 .find( '.right' )
                     .find( '.distance' )
                         .css( "color", "#" + ( oBank && oBank.color ? oBank.color : "333" ) )
-                        .text( ( parseFloat( this.model.get( "distance" ) ) * 1000 ) + "m" )
+                        .text( '+- ' + ( parseFloat( this.model.get( "distance" ) ) * 1000 ) + "m" )
                         .end()
                     .end();
 
@@ -65,7 +65,7 @@ module.exports = Backbone.View.extend( {
 
     "showTerminal": function( e ) {
         e.preventDefault();
-        window.app.router.navigate( "terminals/details/" + this.model.get( "id" ), { trigger: true } );
+        window.app.router.navigate( "admin/details/" + this.model.get( "id" ), { trigger: true } );
     }
 
 } );
