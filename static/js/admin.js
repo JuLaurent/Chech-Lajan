@@ -157,7 +157,7 @@ module.exports = Backbone.Router.extend( {
                     "success": function() {
                         that.views.main.clearContent();
                         that.views.main.initAdminList( that.views.list.render() );
-                        that.views.main.loading( false, "Distributeurs dans un rayon de " );
+                        that.views.main.loading( false, "Liste des distributeurs" );
                     }
                 } );
     },
@@ -175,7 +175,7 @@ module.exports = Backbone.Router.extend( {
                     "success": function() {
                         that.views.main.clearContent();
                         that.views.main.initAdminDetails( that.views.details.render() );
-                        that.views.main.loading( false );
+                        that.views.main.loading( false, "Détails sur le distributeur" );
                     }
                 } );
 
@@ -214,6 +214,11 @@ module.exports = Backbone.View.extend( {
         }
     },
 
+    "events": {
+        "click #reload": "reloadList",
+        "click #back": "backList"
+    },
+
     "render": function() {
         
         this.$el
@@ -235,6 +240,19 @@ module.exports = Backbone.View.extend( {
     "setStatus": function( sText ) {
         this.$status.text( sText );
     },
+
+    "reloadList": function(e) {
+        e.preventDefault();
+        Backbone.history.loadUrl(Backbone.history.fragment);
+    },
+
+    "backList": function(e) {
+        e.preventDefault();
+        window.app.router.navigate( "admin", { trigger: true } );
+    },
+
+
+
 
 } );
 
@@ -341,15 +359,14 @@ module.exports = Backbone.View.extend( {
 
     "render": function() {
 
+        $( '#back' ).show();
+
         var oBank = this.model.get( "bank" );
 
         var oTerminalPosition = {
             "latitude": this.model.get( "latitude" ),
             "longitude": this.model.get( "longitude" )
         };
-
-        $( "#status" ).hide();
-        $( "#back" ).show();
 
         this.$el
             .html( _tpl )
@@ -570,12 +587,13 @@ module.exports = Backbone.View.extend( {
     },
 
     "events": {
-        "click #reload": "reloadList",
         "click #show": "showList",
         "click #hide": "hideList",
     },
 
     "render": function() {
+
+        $( '#back' ).hide();
 
         this.$el
             .html( _tpl );
@@ -644,13 +662,8 @@ module.exports = Backbone.View.extend( {
 
     },
 
-    "reloadList": function(e) {
-        e.preventDefault();
-        alert('coucou');
-        window.app.router.navigate( "admin/list", { trigger: true } );
-    },
-
     "showList": function(e) {
+        
         e.preventDefault();
 
         this.$el

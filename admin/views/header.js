@@ -29,6 +29,11 @@ module.exports = Backbone.View.extend( {
         }
     },
 
+    "events": {
+        "click #reload": "reloadList",
+        "click #back": "backList"
+    },
+
     "render": function() {
         
         this.$el
@@ -50,5 +55,18 @@ module.exports = Backbone.View.extend( {
     "setStatus": function( sText ) {
         this.$status.text( sText );
     },
+
+    "reloadList": function(e) {
+        e.preventDefault();
+        Backbone.history.loadUrl(Backbone.history.fragment);
+    },
+
+    "backList": function(e) {
+        e.preventDefault();
+        window.app.router.navigate( "admin", { trigger: true } );
+    },
+
+
+
 
 } );

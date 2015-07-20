@@ -76,7 +76,7 @@ module.exports = Backbone.Router.extend( {
                     "success": function() {
                         that.views.main.clearContent();
                         that.views.main.initAdminList( that.views.list.render() );
-                        that.views.main.loading( false, "Distributeurs dans un rayon de " );
+                        that.views.main.loading( false, "Liste des distributeurs" );
                     }
                 } );
     },
@@ -94,7 +94,7 @@ module.exports = Backbone.Router.extend( {
                     "success": function() {
                         that.views.main.clearContent();
                         that.views.main.initAdminDetails( that.views.details.render() );
-                        that.views.main.loading( false );
+                        that.views.main.loading( false, "Détails sur le distributeur" );
                     }
                 } );
 

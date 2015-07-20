@@ -38,12 +38,13 @@ module.exports = Backbone.View.extend( {
     },
 
     "events": {
-        "click #reload": "reloadList",
         "click #show": "showList",
         "click #hide": "hideList",
     },
 
     "render": function() {
+
+        $( '#back' ).hide();
 
         this.$el
             .html( _tpl );
@@ -112,13 +113,8 @@ module.exports = Backbone.View.extend( {
 
     },
 
-    "reloadList": function(e) {
-        e.preventDefault();
-        alert('coucou');
-        window.app.router.navigate( "admin/list", { trigger: true } );
-    },
-
     "showList": function(e) {
+        
         e.preventDefault();
 
         this.$el

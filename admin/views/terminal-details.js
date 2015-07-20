@@ -40,15 +40,14 @@ module.exports = Backbone.View.extend( {
 
     "render": function() {
 
+        $( '#back' ).show();
+
         var oBank = this.model.get( "bank" );
 
         var oTerminalPosition = {
             "latitude": this.model.get( "latitude" ),
             "longitude": this.model.get( "longitude" )
         };
-
-        $( "#status" ).hide();
-        $( "#back" ).show();
 
         this.$el
             .html( _tpl )

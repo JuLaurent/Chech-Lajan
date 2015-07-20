@@ -71,6 +71,7 @@ header:after {
 
 #back {
   float: left;
+  display: none;
   background-image: url(../images/icons/back.svg);
   background-repeat: no-repeat;
   background-size: contain;
