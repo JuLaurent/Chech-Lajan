@@ -179,13 +179,13 @@ ul a {
 }
 
 .details .left {
-  display: inline-block;
+  float: left;
   width: 75%;
   text-align: left;
 }
 
 .details .right {
-  display: inline-block;
+  float: left;
   width: 25%;
   text-align: right;
 }
@@ -209,14 +209,109 @@ a.shown {
   height: 800px;
 }
 
+.tools {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  padding: 1em 3em;
+}
+
+.toolWrapper {
+  display:block;
+  width:25%;
+  margin:1em 0;
+}
+
+.tool {
+  box-sizing: border-box;
+  display: block;
+  padding: 1.5em;
+  background-color: #000c20;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.tool:hover {
+  background-color: #007f7b;
+}
+
+
+.formulaire {
+  display: none;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+input[type="text"], select{
+  box-sizing: border-box;
+  border:0px;
+  border-bottom:1px solid #000c20;
+  width: 25%;
+  margin-right: 2%;
+  padding:0.4em 0;
+}
+
+input[type="submit"]{
+  box-sizing: border-box;
+  width: 23%;
+  padding: 1em;
+  border:0;
+  background-color: #000c20;
+  color: white;
+}
+
+input[type="submit"]:hover{
+  background-color: #007f7b;
+}
+
+#fullTerminal {
+  display: none;
+}
+
+#empty {
+  display: none;
+  color: #CD000C;
+  font-weight: bold;
+}
+
 @media screen and (max-width: 1280px) {
   #gmap {
     height: 600px;
   }
+
+  .toolWrapper {
+    width:50%;
+  }
+
+  input[type="text"], select{
+    width: 50%;
+  }
+
+  input[type="submit"]{
+    width: 47%
+  }  
 }
 
 @media screen and (max-width: 700px) {
+  header, #status, ul a, a.shown, .tools {
+    padding: 1em;
+  }
+
   #gmap {
     height: 400px;
   }
+
+  .toolWrapper {
+    width:100%;
+  }
+
+  input[type="text"], select{
+    width: 100%;
+    margin-bottom: 0.8em
+  }
+
+  input[type="submit"]{
+    width: 100%
+  }   
 }

@@ -69,10 +69,50 @@
                 <div class="left">
                     <img src="" alt="" width="16" height="16" />
                     <span class="name"></span>
-                    <address></address>    
-                </div><!--
-                --><div class="right">
+                    <address></address>
+                    <span id="empty">Le distributeur est vide</span> 
+                </div>
+                <div class="right">
                     <span class="distance"></span>
+                </div>
+            </div>
+            <div class="tools">
+                <span class="toolWrapper">
+                    <a href="#" id="emptyTerminal" class="tool" title="Signaler le distributeur comme vide">Signaler comme vide</a>
+                    <a href="#" id="fullTerminal" class="tool" title="Signaler le distributeur comme rempli">Signaler comme rempli</a>
+                </span>
+                <span class="toolWrapper">
+                    <a href="#" id="wrongAddress" class="tool" title="Changer l'adresse de la banque">Changer l'adresse</a>
+                </span>
+                <div class="changeAddress formulaire">
+                    <form action="#" method="post" id="changeAddress">
+                        <input type="text" class="text" id="address" name="address" placeholder="L'adresse de la banque" value=""/>
+                        <input type="submit" class="submit" value="Valider"/>
+                    </form>
+                </div>
+                <span class="toolWrapper">
+                    <a href="#" id="wrongBank" class="tool" title="Changer la banque">Changer la banque</a>
+                </span>
+                <div class="changeBank formulaire">
+                    <form action="#" method="post" id="changeBank">
+                        <select id="bankSelect" name="bank">
+                            <option value="53937660e0b8c05979c6ea55">Argenta</option>
+                            <option value="53937660e0b8c05979c6ea56">AXA</option>
+                            <option value="53937660e0b8c05979c6ea57">Belfius</option>
+                            <option value="53937660e0b8c05979c6ea58">BeoBank</option>
+                            <option value="53937660e0b8c05979c6ea59">BPost Banque</option>
+                            <option value="53937660e0b8c05979c6ea5a">Crelan</option>
+                            <option value="53937660e0b8c05979c6ea5b">CBC</option>
+                            <option value="53937660e0b8c05979c6ea5c">KBC</option>
+                            <option value="53937660e0b8c05979c6ea5d">Keytrade Bank</option>
+                            <option value="53937660e0b8c05979c6ea5e">BNP Paribas Fortis</option>
+                            <option value="53937660e0b8c05979c6ea5f">ING</option>
+                            <option value="53937660e0b8c05979c6ea60">BKCP</option>
+                            <option value="53937660e0b8c05979c6ea61">Delta Lloyd Bank</option>
+                            <option value="53937660e0b8c05979c6ea62">Deutsche Bank</option>
+                        </select> 
+                        <input type="submit" class="submit"value="Valider"/>
+                    </form>
                 </div>
             </div>
         </script>

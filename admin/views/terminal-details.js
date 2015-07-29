@@ -34,8 +34,13 @@ module.exports = Backbone.View.extend( {
     },
 
     "events": {
-        "click .problems a": "toggleEmptyState",
-        "click #back": "backList"
+        "click #emptyTerminal": "toggleEmptyState",
+        "click #fullTerminal": "toggleFullState",
+        "click #wrongAddress": "changeInfos",
+        "click #wrongBank": "changeInfos",
+        "submit #changeAddress": "changeAddress",
+        "submit #changeBank": "changeBank",
+
     },
 
     "render": function() {
@@ -72,6 +77,19 @@ module.exports = Backbone.View.extend( {
                         .text( '+- ' + ( +( jeyodistans( oTerminalPosition, this.position ) * 1000 ) + "m" ) )
                         .end()
                     .end();
+
+        if( this.model.get( 'empty' ) == true ) {
+            this.$el
+                .find( '#empty' )
+                    .show()
+                    .end()
+                .find ( '#fullTerminal' )
+                    .css( 'display', 'block' )
+                    .end()
+                .find( '#emptyTerminal' )
+                    .hide()
+                    .end()
+        }
 
         this.create();
 
@@ -132,25 +150,73 @@ module.exports = Backbone.View.extend( {
 
     "toggleEmptyState": function( e ) {
         e.preventDefault();
-        var that = this;
-        this.model.set( "empty", false );
+
+        this.model.set( "empty", true );
+
         this.model.save( null, {
             "url": "/api/terminals/" + this.model.get( "id" ) + "/empty",
             "success": function() {
-                that.$el
-                    .find( "empty" )
-                        .show()
-                        .end()
-                    .find( ".problems" )
-                        .hide();
+                $( '#empty' ).show();
+                $( '#fullTerminal' ).css( 'display', 'block' );
+                $( '#emptyTerminal' ).hide();
             }
         } );
     },
 
-    "backList": function( e ) {
+    "toggleFullState": function( e ) {
+        e.preventDefault();
+
+        this.model.set( "empty", false );
+
+        this.model.save( null, {
+            "url": "/api/terminals/" + this.model.get( "id" ) + "/full",
+            "success": function() {
+                $( '#empty' ).hide();
+                $( '#fullTerminal' ).hide();
+                $( '#emptyTerminal' ).show();
+            }
+        } );
+    },
+
+    "changeInfos": function( e ) {
+        e.preventDefault();
+
+        if( e.target.id == 'wrongAddress' ) {
+            $( '.formulaire' ).hide();
+            $( '.changeAddress' ).show();
+        }
+        else {
+            $( '.formulaire' ).hide();
+            $( '.changeBank' ).show();
+
+            
+        }
+    },
+
+    "changeAddress": function( e ){
         e.preventDefault();
         
-        console.log('back');
-    }
+        var address = $( '#address' ).val();
+
+        this.model.save( null, {
+            'url': '/api/terminals/' + this.model.get( 'id' ) + '/' + address + '/changeaddress',
+            'success': function() {
+                Backbone.history.loadUrl(Backbone.history.fragment);
+            }
+        } );          
+    },
+
+    "changeBank": function( e ){
+        e.preventDefault();
+        
+        var bank = $( '#bankSelect' ).val();
+
+        this.model.save( null, {
+            'url': '/api/terminals/' + this.model.get( 'id' ) + '/' + bank + '/changebank',
+            'success': function() {
+                Backbone.history.loadUrl(Backbone.history.fragment);
+            }
+        } );          
+    },
 
 } );
