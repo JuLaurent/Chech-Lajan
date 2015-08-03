@@ -74,7 +74,7 @@ module.exports = Backbone.View.extend( {
                 .find( '.right' )
                     .find( '.distance' )
                         .css( "color", "#" + ( oBank && oBank.color ? oBank.color : "333" ) )
-                        .text( '+- ' + ( +( jeyodistans( oTerminalPosition, this.position ) * 1000 ) + "m" ) )
+                        .text( '+- ' + ( +( jeyodistans( oTerminalPosition, this.position ) ) + "km" ) )
                         .end()
                     .end();
 
@@ -114,38 +114,52 @@ module.exports = Backbone.View.extend( {
             position: myLatlng,
             title: 'Ma position',
             map: myMap,
-            icon: 'images/markers/me_marker.png',
+            icon: '/images/markers/me_marker.png',
             zIndex: 2
-        });
-
-        var infowindow = new google.maps.InfoWindow({
-            content: '<div>'+ myMarker.title + '</div>'
-        });
-
-        google.maps.event.addListener( myMarker, 'click', function(e) {
-            infowindow.open(myMap, myMarker);
         });
             
         var bank = this.model.get( "bank" ),
-                latitude = this.model.get( "latitude" ),
-                longitude = this.model.get( "longitude" );
+            latitude = this.model.get( "latitude" ),
+            longitude = this.model.get( "longitude" );
 
         var bankMarker = new google.maps.Marker({
             position: new google.maps.LatLng( latitude, longitude ),
             title: this.model.get( 'bank' ).name,
             map: myMap,
             icon: '/images/markers/terminal_marker.png',
-            zIndex: 1
+            zIndex: 1,
+            draggable: true
         });
 
-        var infowindow2 = new google.maps.InfoWindow({
-            content: '<div>'+ bankMarker.title + '</div>'
+        bankMarker.set( 'model', this.model );
+
+        google.maps.event.addListener( bankMarker, 'dragend', function() {
+            
+            geocodePosition( bankMarker.getPosition() );
+
         });
 
-        google.maps.event.addListener( bankMarker, 'click', function(e) {
-            infowindow2.open(myMap, bankMarker);
-        });
-        
+        function geocodePosition( position ) {
+            var geocoder = new google.maps.Geocoder();
+            
+            geocoder.geocode({ latLng: position }, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+
+                    var address = results[0].formatted_address,
+                        latitude = position.G,
+                        longitude = position.K;
+
+                    bankMarker.get( 'model' ).save( null, {
+                        'url': '/api/terminals/' + bankMarker.get( 'model' ).get( 'id' ) + '/' + address + '/' + latitude + '/' + longitude + '/changeposition',
+                        'success': function() {
+                            Backbone.history.loadUrl(Backbone.history.fragment);
+                        }
+                    } ); 
+
+                } 
+            } );
+        }
+
     },
 
     "toggleEmptyState": function( e ) {

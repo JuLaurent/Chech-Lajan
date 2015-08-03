@@ -41,7 +41,7 @@ module.exports = Backbone.View.extend( {
             .find( ".details" )
                 .find( '.left' )
                     .find( "img" )
-                        .attr( "src", oBank && oBank.icon ? "/images/banks/" + oBank.icon : "images/banks/unknown.png" )
+                        .attr( "src", oBank && oBank.icon ? "/images/banks/" + oBank.icon : "/images/banks/unknown.png" )
                         .attr( "alt", oBank && oBank.name ? oBank.name : "Inconnu" )
                         .end()
                     .find( ".name" )
@@ -56,7 +56,7 @@ module.exports = Backbone.View.extend( {
                 .find( '.right' )
                     .find( '.distance' )
                         .css( "color", "#" + ( oBank && oBank.color ? oBank.color : "333" ) )
-                        .text( '+- ' + ( parseFloat( this.model.get( "distance" ) ) * 1000 ) + "m" )
+                        .text( '+- ' + ( parseFloat( this.model.get( "distance" ) ) ) + "km" )
                         .end()
                     .end();
 

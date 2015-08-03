@@ -21,13 +21,18 @@ module.exports = Backbone.View.extend( {
 
     "el": "<section />",
 
-    "constructor": function( oPosition, oTerminalsCollection ) {
+    "constructor": function( oPosition, oTerminalsCollection, oRadius ) {
         Backbone.View.apply( this, arguments );
 
         //console.log(latitude);
 
         this.collection = oTerminalsCollection;
         this.position = oPosition;
+        this.radius = oRadius ;
+
+        if( this.radius == null ) {
+            this.radius = 5;
+        }
 
         console.log( "AdminTerminalsListView:init()" );
 
@@ -40,6 +45,7 @@ module.exports = Backbone.View.extend( {
     "events": {
         "click #show": "showList",
         "click #hide": "hideList",
+        "change #radius": "changeRadius"
     },
 
     "render": function() {
@@ -47,7 +53,13 @@ module.exports = Backbone.View.extend( {
         $( '#back' ).hide();
 
         this.$el
-            .html( _tpl );
+            .html( _tpl )
+                .find( '#radius' )
+                    .attr( 'value', this.radius )
+                    .end()
+                .find( '#radiusValue' )
+                    .text( this.radius + 'km' )
+                    .end();
 
         this.create();
 
@@ -59,7 +71,7 @@ module.exports = Backbone.View.extend( {
         var myLatlng = new google.maps.LatLng(this.position.latitude, this.position.longitude);
 
         var myOptions = {
-            zoom: 11,
+            zoom: 8,
             zoomControl: true,
             scrollwheel: false,
             center: myLatlng,
@@ -72,16 +84,26 @@ module.exports = Backbone.View.extend( {
             position: myLatlng,
             title: 'Ma position',
             map: myMap,
-            icon: 'images/markers/me_marker.png',
-            zIndex: 2
+            icon: '/images/markers/me_marker.png',
+            zIndex: 2,
+            draggable: true
         });
 
-        var infowindow = new google.maps.InfoWindow({
-            content: '<div>'+ myMarker.title + '</div>'
+        google.maps.event.addListener( myMarker, 'dragend', function() {
+            
+            console.log( myMarker.getPosition() );
+
         });
 
-        google.maps.event.addListener( myMarker, 'click', function(e) {
-            infowindow.open(myMap, myMarker);
+        var myCircle = new google.maps.Circle({
+            strokeColor: '#000c20',
+            strokeOpacity: 0.8,
+            strokeWeight: 4,
+            fillColor: '#ffffff',
+            fillOpacity: 0.4,
+            map: myMap,
+            center: myLatlng,
+            radius: this.radius * 1000
         });
 
         this.collection.each( function( oTerminalModel ) {
@@ -94,18 +116,9 @@ module.exports = Backbone.View.extend( {
 
             var myMarker = new google.maps.Marker({
                 position: new google.maps.LatLng( latitude, longitude ),
-                title: model.get( 'bank' ).name,
                 map: myMap,
                 icon: '/images/markers/terminal_marker.png',
                 zIndex: 1
-            });
-
-            var infowindow = new google.maps.InfoWindow({
-                content: '<div>'+ myMarker.title + '</div>'
-            });
-
-            google.maps.event.addListener( myMarker, 'click', function(e) {
-                infowindow.open(myMap, myMarker);
             });
 
         } );
@@ -117,17 +130,24 @@ module.exports = Backbone.View.extend( {
         
         e.preventDefault();
 
+
         this.$el
             .html( _tpl )
-            .find( '#show' )
-                .attr( 'class', 'hidden' )
-                .end() 
-            .find( '#hide' )
-                .attr( 'class', 'shown' )
-                .end() 
-            .find( 'ul' )
-                .slideDown()
-                .end();
+                .find( '#radius' )
+                    .attr( 'value', this.radius )
+                    .end()
+                .find( '#radiusValue' )
+                    .text( this.radius + 'km' )
+                    .end()
+                .find( '#show' )
+                    .attr( 'class', 'hidden' )
+                    .end() 
+                .find( '#hide' )
+                    .attr( 'class', 'shown' )
+                    .end() 
+                .find( 'ul' )
+                    .show()
+                    .end();
 
         var $list = this.$el.find( "ul" );
 
@@ -141,15 +161,29 @@ module.exports = Backbone.View.extend( {
 
         this.$el
             .html( _tpl )
-            .find( '#show' )
-                .attr( 'class', 'shown' )
-                .end() 
-            .find( '#hide' )
-                .attr( 'class', 'hidden' )
-                .end() 
-            .find( 'ul' )
-                .slideUp()
-                .end()
-    }
+                .find( '#radius' )
+                    .attr( 'value', this.radius )
+                    .end()
+                .find( '#radiusValue' )
+                    .text( this.radius + 'km' )
+                    .end()
+                .find( '#show' )
+                    .attr( 'class', 'shown' )
+                    .end() 
+                .find( '#hide' )
+                    .attr( 'class', 'hidden' )
+                    .end() 
+                .find( 'ul' )
+                    .hide()
+                    .end()
+    },
+
+    "changeRadius": function( e ){
+        e.preventDefault();
+
+        var radius = $( '#radius' ).val(); 
+
+        window.app.router.navigate( "admin/list/" + radius, { trigger: true } );
+    },
 
 } );

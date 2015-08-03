@@ -202,6 +202,13 @@ ul a {
 a.shown {
   box-sizing: border-box;
   padding: 1em 3em;
+  color: white;
+  background-color: #000c20;
+  font-weight: bold;
+}
+
+a.shown:hover {
+  background-color: #007f7b;
 }
 
 #gmap {
@@ -275,6 +282,56 @@ input[type="submit"]:hover{
   font-weight: bold;
 }
 
+#changeRadius {
+  padding: 1em 3em;
+}
+
+#changeRadius:after {
+  content: "";
+  clear: both;
+  display: block;
+}
+
+#changeRadius div {
+  float: left;
+  margin-right: 3em;
+}
+
+#radius {
+  width: 25%;
+  float: left;
+}
+
+input[type=range]{
+    -webkit-appearance: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 300px;
+    height: 8px;
+    background: #000c20;
+    border: none;
+    border-radius: 3px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #007f7b;
+    margin-top: -6px;
+}
+
+input[type=range]:focus {
+    outline: none;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #0A1970;
+}
+
 @media screen and (max-width: 1280px) {
   #gmap {
     height: 600px;
@@ -290,11 +347,15 @@ input[type="submit"]:hover{
 
   input[type="submit"]{
     width: 47%
+  }
+
+  #radius {
+    width: 50%;
   }  
 }
 
 @media screen and (max-width: 700px) {
-  header, #status, ul a, a.shown, .tools {
+  header, #status, ul a, a.shown, .tools, #changeRadius {
     padding: 1em;
   }
 
@@ -313,5 +374,16 @@ input[type="submit"]:hover{
 
   input[type="submit"]{
     width: 100%
+  }
+
+  #changeRadius div {
+    float: none;
+    margin-right: 0;
+    margin-bottom: 1em;
+  }
+
+  #radius {
+    width: 100%;
+    float: none;
   }   
 }

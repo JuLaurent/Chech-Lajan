@@ -16,14 +16,14 @@ var Terminal = db.get( "Terminal" );
 
 var iMaxSearchRadius = 20,
     iArcKilometer = 0.009259,
-    iAdminMaxSearchRadius = Infinity;
+    iAdminMaxSearchRadius = 350;
 
 // [GET] /api/terminals
 
 var list = function( oRequest, oResponse ) {
     var fLatitude = parseFloat( oRequest.query.latitude ),
         fLongitude = parseFloat( oRequest.query.longitude ),
-        iGivenRadius = +oRequest.query.radius,
+        iGivenRadius = +parseFloat(oRequest.query.radius),
         iSearchRadiusSize,  // parseInt( oRequest.query.radius, 10 )
         oPosition = {
             "latitude": fLatitude,
@@ -32,7 +32,7 @@ var list = function( oRequest, oResponse ) {
     if( !fLatitude || !fLongitude ) {
         return api.error( oRequest, oResponse, "TERMINALS_LIST_NO_POSITION_GIVEN", oRequest.query );
     }
-    if( isNaN( iGivenRadius ) || iGivenRadius > iMaxSearchRadius ) {
+    if( isNaN( iGivenRadius ) ) {
         iGivenRadius = 5;
     }
     iSearchRadiusSize = iArcKilometer * iGivenRadius;
@@ -63,7 +63,16 @@ var list = function( oRequest, oResponse ) {
             aCleanedTerminals.sort( function( oOne, oTwo ) {
                 return oOne.distance - oTwo.distance;
             } );
-            aSplicedTerminals = aCleanedTerminals.splice( 0, 10 );
+            
+            if( iGivenRadius != 5) {
+                aSplicedTerminals = aCleanedTerminals;
+
+                console.log(aSplicedTerminals);
+            }
+            else {
+                aSplicedTerminals = aCleanedTerminals.splice( 0, 10 );
+            }
+            
             api.send( oRequest, oResponse, aSplicedTerminals );
         } );
 };
@@ -143,6 +152,29 @@ var changeAddress = function( oRequest, oResponse ) {
         } );
 };
 
+var changePosition = function( oRequest, oResponse ) {
+    Terminal
+        .findById( oRequest.params.id )
+        .exec( function( oError, oTerminal ) {
+            if( oError ) {
+                return api.error( oRequest, oResponse, oError.type, oError );
+            }
+            if( !oTerminal ) {
+                return api.error( oRequest, oResponse, "TERMINAL_UNKNOWN" );
+            }
+            oTerminal.address = oRequest.params.address;
+            oTerminal.latitude = oRequest.params.latitude;
+            oTerminal.longitude = oRequest.params.longitude;
+
+            oTerminal.save( function( oError, oSavedTerminal ) {
+                if( oError ) {
+                    return api.error( oRequest, oResponse, oError.type, oError );
+                }
+                api.send( oRequest, oResponse, true );
+            } );
+        } );
+};
+
 var changeBank = function( oRequest, oResponse ) {
     Terminal
         .findById( oRequest.params.id )
@@ -170,5 +202,6 @@ exports.init = function( oApp ) {
     oApp.put( "/api/terminals/:id/empty", empty );
     oApp.put( "/api/terminals/:id/full", full );
     oApp.put( "/api/terminals/:id/:address/changeaddress", changeAddress );
+    oApp.put( "/api/terminals/:id/:address/:latitude/:longitude/changeposition", changePosition );
     oApp.put( "/api/terminals/:id/:bank/changebank", changeBank );
 };

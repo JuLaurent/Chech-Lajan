@@ -46,6 +46,15 @@
         </script>
         
         <script type="text/template" id="tpl-list">
+            <div>
+                <form id="changeRadius">
+                    <div>
+                        <label for="radius">Zone de recherche :</label>
+                        <span id="radiusValue"></span>
+                    </div> 
+                    <input type="range" id="radius" min="1" max="350" class="range">
+                </form>
+            </div> 
             <a href="#" id="show" class="shown">Voir la liste des distributeurs</a>
             <a href="#" id="hide" class="hidden">Cacher la liste des distributeurs</a>
             <ul></ul>

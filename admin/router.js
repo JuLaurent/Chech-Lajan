@@ -30,6 +30,7 @@ module.exports = Backbone.Router.extend( {
     "routes": {
         "admin": "showAdminTerminalsList",
         "admin/list": "showAdminTerminalsList",
+        "admin/list/:radius": "showAdminTerminalsList",
         "admin/details/:id": "showAdminTerminalDetails"
     },
 
@@ -59,19 +60,22 @@ module.exports = Backbone.Router.extend( {
         } );
     },
 
-    "showAdminTerminalsList": function() {
+    "showAdminTerminalsList": function( oRadius ) {
         console.log( "showAdminTerminalsList" );
+
+        console.log( oPosition.latitude );
 
         var that = this;
         this.views.main.loading( true );
         var oTerminalsCollection = new TerminalsCollection();
 
-        ( this.views.list = new AdminTerminalsListView( oPosition, oTerminalsCollection ) )
+        ( this.views.list = new AdminTerminalsListView( oPosition, oTerminalsCollection, oRadius ) )
             .collection
                 .fetch( {
                     "data": {
                         "latitude": oPosition.latitude,
-                        "longitude": oPosition.longitude
+                        "longitude": oPosition.longitude,
+                        "radius": oRadius
                     },
                     "success": function() {
                         that.views.main.clearContent();
