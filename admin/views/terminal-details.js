@@ -127,14 +127,21 @@ module.exports = Backbone.View.extend( {
             title: this.model.get( 'bank' ).name,
             map: myMap,
             icon: '/images/markers/terminal_marker.png',
+            animation: google.maps.Animation.BOUNCE,
             zIndex: 1,
             draggable: true
         });
 
         bankMarker.set( 'model', this.model );
 
-        google.maps.event.addListener( bankMarker, 'dragend', function() {
+        google.maps.event.addListener( bankMarker, 'dragstart', function() {
             
+            bankMarker.setAnimation(null);
+
+        });
+
+        google.maps.event.addListener( bankMarker, 'dragend', function() {
+
             geocodePosition( bankMarker.getPosition() );
 
         });
