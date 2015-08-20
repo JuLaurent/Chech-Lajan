@@ -17,6 +17,7 @@ var AdminMainView = require( "./views/main" );
 var AdminHeaderView = require( "./views/header" );
 var AdminTerminalsListView = require ( "./views/terminals-list" );
 var AdminTerminalDetailsView = require ( "./views/terminal-details" );
+var AdminNewTerminalView = require ( "./views/new-terminal" );
 
 var TerminalsCollection = require( "./collections/terminals" );
 var TerminalModel = require( "./models/terminal" );
@@ -30,6 +31,7 @@ module.exports = Backbone.Router.extend( {
     "routes": {
         "admin": "showAdminTerminalsList",
         "admin/list": "showAdminTerminalsList",
+        "admin/newterminal": "showAdminNewTerminal",
         "admin/list/:radius": "showAdminTerminalsList",
         "admin/details/:id": "showAdminTerminalDetails"
     },
@@ -63,7 +65,7 @@ module.exports = Backbone.Router.extend( {
     "showAdminTerminalsList": function( oRadius ) {
         console.log( "showAdminTerminalsList" );
 
-        console.log( oPosition.latitude );
+        console.log( new AdminTerminalsListView );
 
         var that = this;
         this.views.main.loading( true );
@@ -102,6 +104,29 @@ module.exports = Backbone.Router.extend( {
                     }
                 } );
 
+    },
+
+    "showAdminNewTerminal": function() {
+        console.log( "showAdminNewTerminal" );
+
+        var that = this;
+        this.views.main.loading( true );
+        var oTerminal = new TerminalModel();
+
+
+        ( this.views.newTerminal = new AdminNewTerminalView( oPosition, oTerminal ) )
+            .model
+                .fetch( {
+                    "data": {
+                        "latitude": oPosition.latitude,
+                        "longitude": oPosition.longitude
+                    },
+                    "success": function() {
+                        that.views.main.clearContent();
+                        that.views.main.initAdminNewTerminal( that.views.newTerminal.render() );
+                        that.views.main.loading( false, "Ajouter un nouveau terminal" );
+                    }
+                } );
     },
 
 } );

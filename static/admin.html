@@ -58,6 +58,8 @@
             <a href="#" id="show" class="shown">Voir la liste des distributeurs</a>
             <a href="#" id="hide" class="hidden">Cacher la liste des distributeurs</a>
             <ul></ul>
+            <!-- <a href="#" id="addTerminal"class="shown">Ajouter un distributeur</a> -->
+            
         </script>
 
         <script type="text/template" id="tpl-list-terminals">
@@ -121,6 +123,39 @@
                             <option value="53937660e0b8c05979c6ea62">Deutsche Bank</option>
                         </select> 
                         <input type="submit" class="submit"value="Valider"/>
+                    </form>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/template" id="tpl-newDistrib">
+            <div class="tools">
+                <div class="formulaire">   
+                    <form action="#" method="post" id="newDistrib">
+                        <div>
+                            <select id="bankSelect" name="bank">
+                                <option value="53937660e0b8c05979c6ea55">Argenta</option>
+                                <option value="53937660e0b8c05979c6ea56">AXA</option>
+                                <option value="53937660e0b8c05979c6ea57">Belfius</option>
+                                <option value="53937660e0b8c05979c6ea58">BeoBank</option>
+                                <option value="53937660e0b8c05979c6ea59">BPost Banque</option>
+                                <option value="53937660e0b8c05979c6ea5a">Crelan</option>
+                                <option value="53937660e0b8c05979c6ea5b">CBC</option>
+                                <option value="53937660e0b8c05979c6ea5c">KBC</option>
+                                <option value="53937660e0b8c05979c6ea5d">Keytrade Bank</option>
+                                <option value="53937660e0b8c05979c6ea5e">BNP Paribas Fortis</option>
+                                <option value="53937660e0b8c05979c6ea5f">ING</option>
+                                <option value="53937660e0b8c05979c6ea60">BKCP</option>
+                                <option value="53937660e0b8c05979c6ea61">Delta Lloyd Bank</option>
+                                <option value="53937660e0b8c05979c6ea62">Deutsche Bank</option>
+                            </select>
+                        </div>
+                        <div>
+                            <input type="text" class="text" id="address" name="address" placeholder="L'adresse de la banque" value=""/>
+                        </div>
+                        <div>
+                            <input type="submit" class="submit"value="Valider"/>
+                        </div> 
                     </form>
                 </div>
             </div>

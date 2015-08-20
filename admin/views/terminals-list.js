@@ -45,6 +45,7 @@ module.exports = Backbone.View.extend( {
     "events": {
         "click #show": "showList",
         "click #hide": "hideList",
+        "click #addTerminal": "addTerminal",
         "change #radius": "changeRadius"
     },
 
@@ -61,12 +62,12 @@ module.exports = Backbone.View.extend( {
                     .text( this.radius + 'km' )
                     .end();
 
-        this.create();
+        this.create( this.radius );
 
         return this;
     },
 
-    "create": function() {
+    "create": function( radius ) {
 
         var myLatlng = new google.maps.LatLng(this.position.latitude, this.position.longitude);
 
@@ -91,7 +92,9 @@ module.exports = Backbone.View.extend( {
 
         google.maps.event.addListener( myMarker, 'dragend', function() {
             
-            console.log( myMarker.getPosition() );
+            console.log(myMarker.getPosition());
+
+            //window.app.router.navigate( "admin/list/" + radius + '/' + myMarker.getPosition().G + '/' + myMarker.getPosition().K, { trigger: true } );
 
         });
 
@@ -184,6 +187,12 @@ module.exports = Backbone.View.extend( {
         var radius = $( '#radius' ).val(); 
 
         window.app.router.navigate( "admin/list/" + radius, { trigger: true } );
+    },
+
+    "addTerminal": function( e ){
+        e.preventDefault();
+
+        window.app.router.navigate( "admin/newterminal", { trigger: true } );
     },
 
 } );
