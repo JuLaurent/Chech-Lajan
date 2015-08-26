@@ -31,7 +31,8 @@ module.exports = Backbone.View.extend( {
 
     "events": {
         "click #reload": "reloadList",
-        "click #back": "backList"
+        "click #back": "backList",
+        'click #mainPage': "backMainPage"
     },
 
     "render": function() {
@@ -65,8 +66,6 @@ module.exports = Backbone.View.extend( {
         e.preventDefault();
         window.app.router.navigate( "admin", { trigger: true } );
     },
-
-
 
 
 } );

@@ -17,7 +17,7 @@ var AdminMainView = require( "./views/main" );
 var AdminHeaderView = require( "./views/header" );
 var AdminTerminalsListView = require ( "./views/terminals-list" );
 var AdminTerminalDetailsView = require ( "./views/terminal-details" );
-var AdminNewTerminalView = require ( "./views/new-terminal" );
+// var AdminNewTerminalView = require ( "./views/new-terminal" );
 
 var TerminalsCollection = require( "./collections/terminals" );
 var TerminalModel = require( "./models/terminal" );
@@ -31,8 +31,8 @@ module.exports = Backbone.Router.extend( {
     "routes": {
         "admin": "showAdminTerminalsList",
         "admin/list": "showAdminTerminalsList",
-        "admin/newterminal": "showAdminNewTerminal",
-        "admin/list/:radius": "showAdminTerminalsList",
+        // "admin/newterminal": "showAdminNewTerminal",
+        "admin/list/:radius/:latitude/:longitude": "showAdminTerminalsList",
         "admin/details/:id": "showAdminTerminalDetails"
     },
 
@@ -62,10 +62,15 @@ module.exports = Backbone.Router.extend( {
         } );
     },
 
-    "showAdminTerminalsList": function( oRadius ) {
+    "showAdminTerminalsList": function( oRadius, oLatitude, oLongitude ) {
         console.log( "showAdminTerminalsList" );
 
-        console.log( new AdminTerminalsListView );
+        if( oLatitude && oLongitude ){
+                oPosition = {
+                latitude: oLatitude,
+                longitude: oLongitude
+            };
+        }
 
         var that = this;
         this.views.main.loading( true );
@@ -106,7 +111,7 @@ module.exports = Backbone.Router.extend( {
 
     },
 
-    "showAdminNewTerminal": function() {
+    /*"showAdminNewTerminal": function() {
         console.log( "showAdminNewTerminal" );
 
         var that = this;
@@ -127,6 +132,6 @@ module.exports = Backbone.Router.extend( {
                         that.views.main.loading( false, "Ajouter un nouveau terminal" );
                     }
                 } );
-    },
+    },*/
 
 } );

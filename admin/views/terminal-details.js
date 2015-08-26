@@ -98,13 +98,18 @@ module.exports = Backbone.View.extend( {
 
     "create": function() {
 
+        var bank = this.model.get( "bank" ),
+            latitude = this.model.get( "latitude" ),
+            longitude = this.model.get( "longitude" );
+
         var myLatlng = new google.maps.LatLng(this.position.latitude, this.position.longitude);
+        var bankLatlng = new google.maps.LatLng( latitude, longitude )
 
         var myOptions = {
             zoom: 15,
             zoomControl: true,
             scrollwheel: false,
-            center: myLatlng,
+            center: bankLatlng,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
 
@@ -117,10 +122,6 @@ module.exports = Backbone.View.extend( {
             icon: '/images/markers/me_marker.png',
             zIndex: 2
         });
-            
-        var bank = this.model.get( "bank" ),
-            latitude = this.model.get( "latitude" ),
-            longitude = this.model.get( "longitude" );
 
         var bankMarker = new google.maps.Marker({
             position: new google.maps.LatLng( latitude, longitude ),

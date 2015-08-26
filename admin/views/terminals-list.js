@@ -86,15 +86,20 @@ module.exports = Backbone.View.extend( {
             title: 'Ma position',
             map: myMap,
             icon: '/images/markers/me_marker.png',
+            animation: google.maps.Animation.BOUNCE,
             zIndex: 2,
             draggable: true
         });
 
-        google.maps.event.addListener( myMarker, 'dragend', function() {
+        google.maps.event.addListener( myMarker, 'dragstart', function() {
             
-            console.log(myMarker.getPosition());
+            myMarker.setAnimation(null);
 
-            //window.app.router.navigate( "admin/list/" + radius + '/' + myMarker.getPosition().G + '/' + myMarker.getPosition().K, { trigger: true } );
+        });
+
+        google.maps.event.addListener( myMarker, 'dragend', function() {
+
+            window.app.router.navigate( "admin/list/" + radius + '/' + myMarker.getPosition().G + '/' + myMarker.getPosition().K, { trigger: true } );
 
         });
 
@@ -186,7 +191,7 @@ module.exports = Backbone.View.extend( {
 
         var radius = $( '#radius' ).val(); 
 
-        window.app.router.navigate( "admin/list/" + radius, { trigger: true } );
+        window.app.router.navigate( "admin/list/" + radius + '/' + this.position.latitude + '/' + this.position.longitude, { trigger: true } );
     },
 
     "addTerminal": function( e ){

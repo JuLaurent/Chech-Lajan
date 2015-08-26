@@ -98,7 +98,7 @@ var AdminMainView = require( "./views/main" );
 var AdminHeaderView = require( "./views/header" );
 var AdminTerminalsListView = require ( "./views/terminals-list" );
 var AdminTerminalDetailsView = require ( "./views/terminal-details" );
-var AdminNewTerminalView = require ( "./views/new-terminal" );
+// var AdminNewTerminalView = require ( "./views/new-terminal" );
 
 var TerminalsCollection = require( "./collections/terminals" );
 var TerminalModel = require( "./models/terminal" );
@@ -112,8 +112,8 @@ module.exports = Backbone.Router.extend( {
     "routes": {
         "admin": "showAdminTerminalsList",
         "admin/list": "showAdminTerminalsList",
-        "admin/newterminal": "showAdminNewTerminal",
-        "admin/list/:radius": "showAdminTerminalsList",
+        // "admin/newterminal": "showAdminNewTerminal",
+        "admin/list/:radius/:latitude/:longitude": "showAdminTerminalsList",
         "admin/details/:id": "showAdminTerminalDetails"
     },
 
@@ -143,10 +143,15 @@ module.exports = Backbone.Router.extend( {
         } );
     },
 
-    "showAdminTerminalsList": function( oRadius ) {
+    "showAdminTerminalsList": function( oRadius, oLatitude, oLongitude ) {
         console.log( "showAdminTerminalsList" );
 
-        console.log( new AdminTerminalsListView );
+        if( oLatitude && oLongitude ){
+                oPosition = {
+                latitude: oLatitude,
+                longitude: oLongitude
+            };
+        }
 
         var that = this;
         this.views.main.loading( true );
@@ -187,7 +192,7 @@ module.exports = Backbone.Router.extend( {
 
     },
 
-    "showAdminNewTerminal": function() {
+    /*"showAdminNewTerminal": function() {
         console.log( "showAdminNewTerminal" );
 
         var that = this;
@@ -208,10 +213,10 @@ module.exports = Backbone.Router.extend( {
                         that.views.main.loading( false, "Ajouter un nouveau terminal" );
                     }
                 } );
-    },
+    },*/
 
 } );
-},{"./collections/terminals":2,"./models/terminal":3,"./views/header":5,"./views/main":6,"./views/new-terminal":7,"./views/terminal-details":8,"./views/terminals-list":10,"backbone":"backbone","jeolok":"jeolok","jquery":"jquery","underscore":"underscore"}],5:[function(require,module,exports){
+},{"./collections/terminals":2,"./models/terminal":3,"./views/header":5,"./views/main":6,"./views/terminal-details":7,"./views/terminals-list":9,"backbone":"backbone","jeolok":"jeolok","jquery":"jquery","underscore":"underscore"}],5:[function(require,module,exports){
 /* Chèch Lajan
  *
  * /views/admin-header.js - backbone admin header view
@@ -245,7 +250,8 @@ module.exports = Backbone.View.extend( {
 
     "events": {
         "click #reload": "reloadList",
-        "click #back": "backList"
+        "click #back": "backList",
+        'click #mainPage': "backMainPage"
     },
 
     "render": function() {
@@ -279,8 +285,6 @@ module.exports = Backbone.View.extend( {
         e.preventDefault();
         window.app.router.navigate( "admin", { trigger: true } );
     },
-
-
 
 
 } );
@@ -343,178 +347,13 @@ module.exports = Backbone.View.extend( {
         this.$el.find( "#main" ).append( AdminTerminalDetailsView.$el );
     },
 
-    "initAdminNewTerminal": function( AdminNewTerminalView ){
+    /*"initAdminNewTerminal": function( AdminNewTerminalView ){
         this.$el.find( "#main" ).append( AdminNewTerminalView.$el );
-    },
+    },*/
 
 } );
 
 },{"backbone":"backbone","jquery":"jquery","underscore":"underscore"}],7:[function(require,module,exports){
-/* Chèch Lajan
- *
- * /views/new-terminal.js - backbone admin new terminal view
- *
- * started @ 19/12/14
- */
-
-"use strict";
-
-var _ = require( "underscore" ),
-    Backbone = require( "backbone" ),
-    $ = require( "jquery" ),
-    jeyodistans = require( "jeyo-distans" );
-
-Backbone.$ = require( "jquery" );
-
-var _tpl;
-
-module.exports = Backbone.View.extend( {
-
-    "el": "<section />",
-
-    "constructor": function( oPosition ) {
-        Backbone.View.apply( this, arguments );
-
-        this.position = oPosition;
-
-        console.log( "NewTerminalView:init()" );
-
-        if( !_tpl ) {
-            _tpl = $( "#tpl-newDistrib" ).remove().text();
-        }
-    },
-
-    "events": {
-
-    },
-
-    "render": function() {
-
-        $( '#back' ).show();
-
-        var oTerminalPosition = {
-            "latitude": this.model.get( "latitude" ),
-            "longitude": this.model.get( "longitude" )
-        };
-
-        /*this.$el
-            .html( _tpl )
-            .find( ".details" )
-                .find( '.left' )
-                    .find( "img" )
-                        .attr( "src", oBank && oBank.icon ? "/images/banks/" + oBank.icon : "images/banks/unknown.png" )
-                        .attr( "alt", oBank && oBank.name ? oBank.name : "Inconnu" )
-                        .end()
-                    .find( ".name" )
-                        .css( "color", "#" + ( oBank && oBank.color ? oBank.color : "333" ) )
-                        .text( oBank && oBank.name ? oBank.name : "Inconnu" )
-                        .end()
-                    .find( "address" )
-                        .css( "color", "#" + ( oBank && oBank.color ? oBank.color : "333" ) )
-                        .text( this.model.get( "address" ) )
-                        .end()
-                    .end()
-                .find( '.right' )
-                    .find( '.distance' )
-                        .css( "color", "#" + ( oBank && oBank.color ? oBank.color : "333" ) )
-                        .text( '+- ' + ( +( jeyodistans( oTerminalPosition, this.position ) ) + "km" ) )
-                        .end()
-                    .end();
-
-        if( this.model.get( 'empty' ) == true ) {
-            this.$el
-                .find( '#empty' )
-                    .show()
-                    .end()
-                .find ( '#fullTerminal' )
-                    .css( 'display', 'block' )
-                    .end()
-                .find( '#emptyTerminal' )
-                    .hide()
-                    .end()
-        }*/
-
-        // this.create();
-
-        return this;
-    },
-
-    "create": function() {
-
-        var myLatlng = new google.maps.LatLng(this.position.latitude, this.position.longitude);
-
-        var myOptions = {
-            zoom: 15,
-            zoomControl: true,
-            scrollwheel: false,
-            center: myLatlng,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-
-        var myMap = new google.maps.Map( document.getElementById('gmap'), myOptions );
-
-        var myMarker = new google.maps.Marker({
-            position: myLatlng,
-            title: 'Ma position',
-            map: myMap,
-            icon: '/images/markers/me_marker.png',
-            zIndex: 2
-        });
-            
-        var bank = this.model.get( "bank" ),
-            latitude = this.model.get( "latitude" ),
-            longitude = this.model.get( "longitude" );
-
-        var bankMarker = new google.maps.Marker({
-            position: new google.maps.LatLng( latitude, longitude ),
-            title: this.model.get( 'bank' ).name,
-            map: myMap,
-            icon: '/images/markers/terminal_marker.png',
-            animation: google.maps.Animation.BOUNCE,
-            zIndex: 1,
-            draggable: true
-        });
-
-        bankMarker.set( 'model', this.model );
-
-        google.maps.event.addListener( bankMarker, 'dragstart', function() {
-            
-            bankMarker.setAnimation(null);
-
-        });
-
-        google.maps.event.addListener( bankMarker, 'dragend', function() {
-
-            geocodePosition( bankMarker.getPosition() );
-
-        });
-
-        function geocodePosition( position ) {
-            var geocoder = new google.maps.Geocoder();
-            
-            geocoder.geocode({ latLng: position }, function(results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-
-                    var address = results[0].formatted_address,
-                        latitude = position.G,
-                        longitude = position.K;
-
-                    bankMarker.get( 'model' ).save( null, {
-                        'url': '/api/terminals/' + bankMarker.get( 'model' ).get( 'id' ) + '/' + address + '/' + latitude + '/' + longitude + '/changeposition',
-                        'success': function() {
-                            Backbone.history.loadUrl(Backbone.history.fragment);
-                        }
-                    } ); 
-
-                } 
-            } );
-        }
-
-    },
-
-
-} );
-},{"backbone":"backbone","jeyo-distans":"jeyo-distans","jquery":"jquery","underscore":"underscore"}],8:[function(require,module,exports){
 /* Chèch Lajan
  *
  * /views/terminal-details.js - backbone admin terminal details view
@@ -615,13 +454,18 @@ module.exports = Backbone.View.extend( {
 
     "create": function() {
 
+        var bank = this.model.get( "bank" ),
+            latitude = this.model.get( "latitude" ),
+            longitude = this.model.get( "longitude" );
+
         var myLatlng = new google.maps.LatLng(this.position.latitude, this.position.longitude);
+        var bankLatlng = new google.maps.LatLng( latitude, longitude )
 
         var myOptions = {
             zoom: 15,
             zoomControl: true,
             scrollwheel: false,
-            center: myLatlng,
+            center: bankLatlng,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
 
@@ -634,10 +478,6 @@ module.exports = Backbone.View.extend( {
             icon: '/images/markers/me_marker.png',
             zIndex: 2
         });
-            
-        var bank = this.model.get( "bank" ),
-            latitude = this.model.get( "latitude" ),
-            longitude = this.model.get( "longitude" );
 
         var bankMarker = new google.maps.Marker({
             position: new google.maps.LatLng( latitude, longitude ),
@@ -759,7 +599,7 @@ module.exports = Backbone.View.extend( {
 
 } );
 
-},{"backbone":"backbone","jeyo-distans":"jeyo-distans","jquery":"jquery","underscore":"underscore"}],9:[function(require,module,exports){
+},{"backbone":"backbone","jeyo-distans":"jeyo-distans","jquery":"jquery","underscore":"underscore"}],8:[function(require,module,exports){
 /* Chèch Lajan
  *
  * /views/terminals-list-element.js - backbone terminals list view
@@ -831,7 +671,7 @@ module.exports = Backbone.View.extend( {
     }
 
 } );
-},{"backbone":"backbone","jquery":"jquery","underscore":"underscore"}],10:[function(require,module,exports){
+},{"backbone":"backbone","jquery":"jquery","underscore":"underscore"}],9:[function(require,module,exports){
 /* Chèch Lajan
  *
  * /views/terminals-list.js - backbone admin terminals list
@@ -920,15 +760,20 @@ module.exports = Backbone.View.extend( {
             title: 'Ma position',
             map: myMap,
             icon: '/images/markers/me_marker.png',
+            animation: google.maps.Animation.BOUNCE,
             zIndex: 2,
             draggable: true
         });
 
-        google.maps.event.addListener( myMarker, 'dragend', function() {
+        google.maps.event.addListener( myMarker, 'dragstart', function() {
             
-            console.log(myMarker.getPosition());
+            myMarker.setAnimation(null);
 
-            //window.app.router.navigate( "admin/list/" + radius + '/' + myMarker.getPosition().G + '/' + myMarker.getPosition().K, { trigger: true } );
+        });
+
+        google.maps.event.addListener( myMarker, 'dragend', function() {
+
+            window.app.router.navigate( "admin/list/" + radius + '/' + myMarker.getPosition().G + '/' + myMarker.getPosition().K, { trigger: true } );
 
         });
 
@@ -1020,7 +865,7 @@ module.exports = Backbone.View.extend( {
 
         var radius = $( '#radius' ).val(); 
 
-        window.app.router.navigate( "admin/list/" + radius, { trigger: true } );
+        window.app.router.navigate( "admin/list/" + radius + '/' + this.position.latitude + '/' + this.position.longitude, { trigger: true } );
     },
 
     "addTerminal": function( e ){
@@ -1030,4 +875,4 @@ module.exports = Backbone.View.extend( {
     },
 
 } );
-},{"./terminals-list-element":9,"backbone":"backbone","jquery":"jquery","underscore":"underscore"}]},{},[1]);
+},{"./terminals-list-element":8,"backbone":"backbone","jquery":"jquery","underscore":"underscore"}]},{},[1]);

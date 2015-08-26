@@ -55,8 +55,8 @@ module.exports = Backbone.View.extend( {
         this.$el.find( "#main" ).append( AdminTerminalDetailsView.$el );
     },
 
-    "initAdminNewTerminal": function( AdminNewTerminalView ){
+    /*"initAdminNewTerminal": function( AdminNewTerminalView ){
         this.$el.find( "#main" ).append( AdminNewTerminalView.$el );
-    },
+    },*/
 
 } );
