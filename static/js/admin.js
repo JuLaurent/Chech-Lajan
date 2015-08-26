@@ -251,7 +251,6 @@ module.exports = Backbone.View.extend( {
     "events": {
         "click #reload": "reloadList",
         "click #back": "backList",
-        'click #mainPage': "backMainPage"
     },
 
     "render": function() {
